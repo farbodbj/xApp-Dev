@@ -1,0 +1,68 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+
+
+packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gpg
+  - containerd
+
+
+# write_files runs before runcmd, so the configs exist before we apply them
+write_files:
+  - path: /etc/sysctl.d/k8s.conf
+    content: |
+      net.bridge.bridge-nf-call-iptables = 1
+      net.bridge.bridge-nf-call-ip6tables = 1
+      net.ipv4.ip_forward = 1
+
+  - path: /etc/modules-load.d/k8s.conf
+    content: |
+      overlay
+      br_netfilter
+
+
+  # containerd needs to know who is the system cgroup driver, we choose systemd, the other option is cgroupfs
+  - path: /etc/containerd/config.toml
+    content: |
+      version = 3
+
+      [plugins.'io.containerd.cri.v1.runtime'.containerd.runtimes.runc.options]
+        SystemdCgroup = true
+  
+
+  - path: /etc/apt/sources.list.d/kubernetes.list
+    defer: true
+    content: | 
+      deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.37/deb/ /
+
+
+runcmd:
+  # Swap should be off when installing k8s, the second command makes it permanent
+  - swapoff -a
+  - sudo sed -i.bak '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+
+  # Two needed modules for k8s networking
+  - modprobe overlay
+  - modprobe br_netfilter
+
+  # Apply the sysctl config written above
+  - sysctl --system
+
+  # We first add the key, then refresh apt so the new repo is visible.
+  # then we install k8s packages and use apt-mark hold to avoid auto-update
+  - mkdir -p -m 755 /etc/apt/keyrings
+  - curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.37/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  - apt-get update
+
+  - apt-get install -y kubelet kubeadm kubectl
+  - apt-mark hold kubelet kubeadm kubectl
+
+  - systemctl enable --now kubelet
+  - systemctl restart containerd 
+
+
+
