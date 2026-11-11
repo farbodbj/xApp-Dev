@@ -1,4 +1,14 @@
 #cloud-config
+users:
+  - default
+  - name: ubuntu
+    groups: [sudo]
+    shell: /bin/bash
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    ssh_authorized_keys:
+      - ${jsonencode(ssh_public_key)}
+
+
 package_update: true
 package_upgrade: true
 
@@ -64,5 +74,8 @@ runcmd:
   - systemctl enable --now kubelet
   - systemctl restart containerd 
 
-
-
+  - curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4
+  - chmod 700 get_helm.sh
+  - ./get_helm.sh
+  - rm get_helm.sh
+  

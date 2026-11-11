@@ -1,0 +1,24 @@
+replicaCount: 1
+
+env:
+  open:
+    STORAGE: local
+    DISABLE_API: false
+
+    # for demonstrating purposes, ideally you should use a sealed secret
+    BASIC_AUTH_USER: admin
+    BASIC_AUTH_PASSWORD: password
+
+persistence:
+  enabled: true
+  storageClass: local-storage
+  existingClaim: chartmuseum-pvc
+
+
+service:
+  type: ClusterIP
+  externalPort: 8080
+
+
+ingress:
+  enabled: false

@@ -1,4 +1,14 @@
 #cloud-config
+users:
+  - default
+  - name: ubuntu
+    groups: [sudo]
+    shell: /bin/bash
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    ssh_authorized_keys:
+      - ${jsonencode(ssh_public_key)}
+
+
 package_update: true
 package_upgrade: true
 
