@@ -1,6 +1,6 @@
 ---
 
-- name: Create ChartMuseum namespace
+- name: Install ChartMuseum
   hosts: k8s-master
   remote_user: "{{ ansible_user }}"
 
@@ -81,7 +81,7 @@
 
 
 
-- name: Install ChartMuseum
+- name: Create ChartMuseum data directory
   hosts: k8s-worker1
   remote_user: "{{ ansible_user }}"
 
@@ -96,10 +96,3 @@
             mode: '0755'
             owner: "{{ ansible_user }}"
             group: "{{ ansible_user }}"
-
-        - name: Create remote chart working directory
-          ansible.builtin.file:
-            path: /home/ubuntu/chartmuseum
-            state: directory
-            mode: '0755'
-

@@ -92,3 +92,5 @@ I have not yet completed this part so you will have a chartmuseum server running
 
 ## Resources 
 - [O-RAN Near-Real Time RIC Installation Guide](https://openaicellular.github.io/oaic/oran_installation.html)
+- [Multipass + Terraform guide](https://dev.to/todoroff/multipass-terraform-modern-vm-automation-guide-129l)
+- [Ansible Basics: Play, Role, Task, Playbook](www.baeldung.com/ops/ansible-task-role-play-playbook)
