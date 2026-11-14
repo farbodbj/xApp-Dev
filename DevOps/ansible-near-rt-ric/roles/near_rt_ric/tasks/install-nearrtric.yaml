@@ -1,0 +1,32 @@
+- name: Create nearrtric values directory on the master
+  become: false
+  ansible.builtin.file:
+    path: /home/ubuntu/nearrtric
+    state: directory
+    mode: '0755'
+
+- name: Copy nearrtric helm values to the master
+  become: false
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../charts/nearrtric/values.yaml"
+    dest: /home/ubuntu/nearrtric/values.yaml
+    mode: '0644'
+
+
+- name: Create ricxapp namespace
+  vars:
+    ansible_python_interpreter: /home/ubuntu/k8s-venv/bin/python
+  kubernetes.core.k8s:
+    name: ricxapp
+    api_version: v1
+    kind: Namespace
+    state: present
+
+- name: Install the charts
+  kubernetes.core.helm:
+    release_name: nearrtric
+    release_namespace: ricplt
+    create_namespace: true
+    chart_ref: local/nearrtric
+    values_files: /home/ubuntu/nearrtric/values.yaml
+

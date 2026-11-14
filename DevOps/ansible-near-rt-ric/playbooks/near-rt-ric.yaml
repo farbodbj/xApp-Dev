@@ -14,12 +14,16 @@
 - name: Master-only tasks
   hosts: k8s_master
   tasks:
-      - ansible.builtin.import_role:
-          name: near_rt_ric
-          tasks_from: add-influxdata.yaml
+    - ansible.builtin.import_role:
+        name: near_rt_ric
+        tasks_from: add-influxdata.yaml
 
-      - ansible.builtin.import_role:
+    - ansible.builtin.import_role:
+        name: near_rt_ric
+        tasks_from: copy-charts.yaml
+
+    - ansible.builtin.import_role:
           name: near_rt_ric
-          tasks_from: copy-charts.yaml
+          tasks_from: install-nearrtric.yaml
 
 
