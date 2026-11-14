@@ -85,10 +85,16 @@ terraform output -raw ansible_inventory > ../ansible-near-rt-ric/inventory.yaml
 
 
 cd ../ansible-near-rt-ric
-ansible-playbook -i inventory.yaml playbook.yaml
+
+# Deploys a chartmuseum server in the cluster and puts it behind an ingress
+ansible-playbook -i inventory.yaml playbooks/chartmuseum.yaml
+
+# Pushes near-rt ric charts to the chartmuseum local repo, and applies them 
+ansible-playbook -i inventory.yaml playbooks/near-rt-ric.yaml
 ```
- 
-I have not yet completed this part so you will have a chartmuseum server running in your k8s cluster after this command
+
+The ansible playbooks are written based on the [new installer](../ric-dep/new-installer/README.md) provided by the official RIC repository,
+which documents the requirements and prequisties. 
 
 ## Resources 
 - [O-RAN Near-Real Time RIC Installation Guide](https://openaicellular.github.io/oaic/oran_installation.html)
