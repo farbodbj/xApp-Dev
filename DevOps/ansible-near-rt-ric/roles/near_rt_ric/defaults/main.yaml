@@ -1,0 +1,2 @@
+---
+submodule_root: "{{ playbook_dir }}/../../../ric-dep"

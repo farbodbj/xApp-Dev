@@ -1,0 +1,59 @@
+- name: Create chartmuseum namespace
+  vars:
+    ansible_python_interpreter: /home/ubuntu/k8s-venv/bin/python
+  kubernetes.core.k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: chartmuseum
+
+- name: Ensure chartmuseum directory exists
+  ansible.builtin.file:
+    path: /home/ubuntu/chartmuseum
+    state: directory
+    mode: '0755'
+    owner: ubuntu
+    group: ubuntu
+
+- name: Copy chart manifests and values to the master
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../charts/chartmuseum/{{ item }}"
+    dest: "/home/ubuntu/chartmuseum/{{ item }}"
+    mode: '0644'
+  loop:
+    - storage.yaml
+    - values.yaml
+
+- name: Apply storage manifests
+  vars:
+    ansible_python_interpreter: /home/ubuntu/k8s-venv/bin/python
+  kubernetes.core.k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    state: present
+    src: /home/ubuntu/chartmuseum/storage.yaml
+
+- name: Add ChartMuseum Helm repo
+  become: false
+  kubernetes.core.helm_repository:
+    name: chartmuseum
+    repo_url: https://chartmuseum.github.io/charts
+
+
+- name: Install / upgrade ChartMuseum
+  become: false
+  kubernetes.core.helm:
+    kubeconfig: "{{ kubeconfig_path }}"
+    name: chartmuseum
+    chart_ref: chartmuseum/chartmuseum
+    release_namespace: chartmuseum
+    update_repo_cache: true
+    release_values: "{{ lookup('ansible.builtin.file', playbook_dir ~ '/../charts/chartmuseum/values.yaml') | from_yaml }}"
+    atomic: true
+    wait: true
+  register: cm_install
+  retries: 5
+  delay: 10
+  until: cm_install is succeeded

@@ -21,4 +21,12 @@ service:
 
 
 ingress:
-  enabled: false
+  enabled: true
+  ingressClassName: nginx        # must match `kubectl get ingressclass`
+  pathType: Prefix
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"   # allow chart uploads
+  hosts:
+    - name: chartmuseum.local
+      path: /
+      tls: false

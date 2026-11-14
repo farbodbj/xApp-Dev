@@ -1,0 +1,8 @@
+- name: Create chartmuseum data directory
+  become: true
+  ansible.builtin.file:
+      path: /data/chartmuseum
+      state: directory
+      mode: '0755'
+      owner: "{{ ansible_user }}"
+      group: "{{ ansible_user }}"

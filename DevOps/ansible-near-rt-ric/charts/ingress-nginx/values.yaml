@@ -1,0 +1,11 @@
+controller:
+  kind: DaemonSet
+  hostNetwork: true
+  dnsPolicy: ClusterFirstWithHostNet
+  nodeSelector:
+    kubernetes.io/hostname: k8s-worker1
+  service:
+    type: ClusterIP
+  ingressClassResource:
+    name: nginx
+    default: true

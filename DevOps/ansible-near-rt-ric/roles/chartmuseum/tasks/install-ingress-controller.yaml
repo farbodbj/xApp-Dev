@@ -1,0 +1,34 @@
+- name: Create ingress values directory
+  ansible.builtin.file:
+    path: /home/ubuntu/ingress
+    state: directory
+    mode: '0755'
+    owner: ubuntu
+    group: ubuntu
+
+- name: Add Ingress-Nginx Helm repo
+  become: false
+  kubernetes.core.helm_repository:
+    name: ingress-nginx
+    repo_url: https://kubernetes.github.io/ingress-nginx
+
+- name: Copy ingress-nginx values
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../charts/ingress-nginx/values.yaml"
+    dest: /home/ubuntu/ingress/values.yaml
+    mode: '0644'
+
+
+- name: Install / upgrade Ingress-Nginx
+  become: false
+  kubernetes.core.helm:
+    kubeconfig: "{{ kubeconfig_path }}"
+    name: ingress-nginx
+    chart_ref: ingress-nginx/ingress-nginx
+    release_namespace: ingress-nginx
+    create_namespace: true
+    update_repo_cache: true
+    release_values: "{{ lookup('ansible.builtin.file', playbook_dir ~ '/../charts/ingress-nginx/values.yaml') | from_yaml }}"
+    wait: true
+
+

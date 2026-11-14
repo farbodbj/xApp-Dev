@@ -1,0 +1,11 @@
+---
+- name: Install required packages
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - jq 
+    # Originally legacy netcat was used in the ric-dep code but I changed to this
+    - netcat-openbsd 
+    - ipset 
+    - moreutils

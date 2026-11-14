@@ -1,0 +1,25 @@
+---
+# playbooks/near-rt-ric.yaml
+- name: Common setup on all nodes
+  hosts: all
+  become: true
+  tasks:
+    - ansible.builtin.import_role:
+        name: near_rt_ric
+        tasks_from: apt_packages.yaml
+    - ansible.builtin.import_role:
+        name: near_rt_ric
+        tasks_from: kernel_modules.yaml
+
+- name: Master-only tasks
+  hosts: k8s_master
+  tasks:
+      - ansible.builtin.import_role:
+          name: near_rt_ric
+          tasks_from: add-influxdata.yaml
+
+      - ansible.builtin.import_role:
+          name: near_rt_ric
+          tasks_from: copy-charts.yaml
+
+

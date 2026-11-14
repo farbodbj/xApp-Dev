@@ -1,0 +1,4 @@
+---
+- ansible.builtin.import_tasks: 01-apt_packages.yaml
+- ansible.builtin.import_tasks: 02-kernel_modules.yaml
+- ansible.builtin.import_tasks: 03-copy-charts.yaml

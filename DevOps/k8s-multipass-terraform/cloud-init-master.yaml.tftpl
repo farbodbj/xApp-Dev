@@ -74,7 +74,8 @@ runcmd:
   - systemctl enable --now kubelet
   - systemctl restart containerd 
 
-  - curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4
+    # Note that only helm v2 and v3 are supported, I originally used v4 which causes some problems
+  - curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
   - chmod 700 get_helm.sh
   - ./get_helm.sh
   - rm get_helm.sh

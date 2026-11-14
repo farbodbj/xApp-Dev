@@ -1,0 +1,19 @@
+---
+# I have submoduled the ORAN Alliance's ric-dep project from Gerrit https://gerrit.o-ran-sc.org/r/ric-plt/ric-dep
+
+- name: Copy Helm Charts from ORAN Aliance ric-dep project
+  become: false
+  ansible.posix.synchronize:
+    src: "{{ submodule_root }}/new-installer"
+    dest: /home/ubuntu/ric-dep/
+
+- name: Install Make
+  become: true
+  ansible.builtin.apt:
+    name: make
+    state: present
+
+- name: Make the default target
+  become: false
+  community.general.make:
+    chdir: /home/ubuntu/ric-dep/new-installer/helm/charts

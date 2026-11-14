@@ -1,0 +1,31 @@
+---
+- name: Create ChartMuseum data directory
+  hosts: k8s-worker1
+  remote_user: "{{ ansible_user }}"
+
+  tasks:
+    - ansible.builtin.import_role:
+        name: chartmuseum
+        tasks_from: create-chartmuseum-storage.yaml
+
+
+- name: Install ChartMuseum
+  hosts: k8s-master
+  remote_user: "{{ ansible_user }}"
+  tasks:
+    - ansible.builtin.import_role:
+        name: chartmuseum
+        tasks_from: install-prequisities.yaml
+
+    - ansible.builtin.import_role:
+        name: chartmuseum
+        tasks_from: install-ingress-controller.yaml
+
+    - ansible.builtin.import_role:
+        name: chartmuseum
+        tasks_from: install-chartmuseum.yaml
+
+    - ansible.builtin.import_role:
+        name: chartmuseum
+        tasks_from: config-chartmuseum.yaml
+        

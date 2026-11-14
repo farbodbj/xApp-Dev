@@ -1,0 +1,24 @@
+---
+# Based on ric-dep/bin/install_k8s_and_helm.sh
+
+# IPVS is used as a high-performance loadbalancer to avoid iptables for loadbalancing
+# read about IPVS at https://kubernetes.io/blog/2018/07/09/ipvs-based-in-cluster-load-balancing-deep-dive/
+
+# SCTP is used for communication over the E2 interface (TODO: I should add SCTP option to k8s api-server)
+# read about SCTP at https://www.sharetechnote.com/html/IP_Network_SCTP.html
+
+- name: Load required kernel modules
+  community.general.modprobe:
+    name: "{{ item }}"
+    state: present
+    persistent: present
+  loop:
+    - ip_vs
+    - ip_vs_rr
+    - ip_vs_wrr
+    - ip_vs_sh
+
+    # The ric-dep repo uses nf_conntrack_ipv4, nf_conntrack_ipv6 which have been merged in Linux kernel 4.18 
+    # I could not find a credible source but nf_conntrack_proto_sctp seems to be merged in nf_conntrack too
+    # my source: https://www.cnblogs.com/Lusai/p/16701240.html
+    - nf_conntrack

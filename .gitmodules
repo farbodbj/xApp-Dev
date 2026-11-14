@@ -1,0 +1,7 @@
+[submodule "ric-dep"]
+	path = ric-dep
+	url = https://gerrit.o-ran-sc.org/r/ric-plt/ric-dep
+	branch = m-release
+
+# M-Release: 2025-12-20
+# See release notes at: https://docs.o-ran-sc.org/en/latest/release-notes.html

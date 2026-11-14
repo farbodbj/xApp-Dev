@@ -1,0 +1,46 @@
+
+- name: Find the node running the ingress controller
+  vars:
+    ansible_python_interpreter: /home/ubuntu/k8s-venv/bin/python
+  kubernetes.core.k8s_info:
+    kubeconfig: "{{ kubeconfig_path }}"
+    kind: Pod
+    namespace: ingress-nginx
+    label_selectors:
+      - app.kubernetes.io/name=ingress-nginx
+  register: ingress_pods
+  until: ingress_pods.resources | length > 0 and ingress_pods.resources[0].status.hostIP is defined
+  retries: 15
+  delay: 4
+
+- name: Map chartmuseum.local to the ingress node
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "{{ ingress_pods.resources[0].status.hostIP }} chartmuseum.local"
+    regexp: '\schartmuseum\.local$'
+
+
+- name: Wait for chartmuseum through ingress
+  ansible.builtin.uri:
+    url: http://chartmuseum.local/health
+    status_code: 200
+  register: cm_health
+  retries: 15
+  delay: 4
+  until: cm_health.status == 200
+
+
+- name: Create helm local repo
+  become: false
+  kubernetes.core.helm_repository:
+    name: local
+    repo_url: http://chartmuseum.local
+    repo_username: admin
+    repo_password: "password"
+
+- name: Install helm-push plugin
+  become: false
+  kubernetes.core.helm_plugin:
+    plugin_path: https://github.com/chartmuseum/helm-push
+    state: present
