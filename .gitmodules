@@ -5,3 +5,6 @@
 
 # M-Release: 2025-12-20
 # See release notes at: https://docs.o-ran-sc.org/en/latest/release-notes.html
+[submodule "e2-interface"]
+	path = e2-interface
+	url = https://gerrit.o-ran-sc.org/r/sim/e2-interface
