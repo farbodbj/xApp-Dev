@@ -96,6 +96,13 @@ ansible-playbook -i inventory.yaml playbooks/near-rt-ric.yaml
 The ansible playbooks are written based on the [new installer](../ric-dep/new-installer/README.md) provided by the official RIC repository,
 which documents the requirements and prequisties. 
 
+What each playbook does:
+* **chartmuseum.yaml**: It's a local repository of helm charts, which helps us keep helm charts more tidy and versioned. It's similar to a docker registry
+
+* **near-rt-ric.yaml**: It makes the VMs ready, and deploys the components of near-rt ric such as appmgr, e2term, submgr etc. along with their services and configurations. 
+
+* **e2sim.yaml (to be written)**: It builds and deploys the E2 interface simulator. It's necessary because it allowes our xApps to recieve some data from RAN side and start functioning based on that. 
+
 ## Resources 
 - [O-RAN Near-Real Time RIC Installation Guide](https://openaicellular.github.io/oaic/oran_installation.html)
 - [Multipass + Terraform guide](https://dev.to/todoroff/multipass-terraform-modern-vm-automation-guide-129l)
