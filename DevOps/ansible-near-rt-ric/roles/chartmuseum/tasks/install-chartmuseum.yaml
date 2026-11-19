@@ -1,6 +1,4 @@
 - name: Create chartmuseum namespace
-  vars:
-    ansible_python_interpreter: /home/ubuntu/k8s-venv/bin/python
   kubernetes.core.k8s:
     kubeconfig: "{{ kubeconfig_path }}"
     state: present
@@ -28,8 +26,6 @@
     - values.yaml
 
 - name: Apply storage manifests
-  vars:
-    ansible_python_interpreter: /home/ubuntu/k8s-venv/bin/python
   kubernetes.core.k8s:
     kubeconfig: "{{ kubeconfig_path }}"
     state: present

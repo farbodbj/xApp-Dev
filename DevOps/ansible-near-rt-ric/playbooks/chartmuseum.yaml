@@ -14,8 +14,7 @@
   remote_user: "{{ ansible_user }}"
   tasks:
     - ansible.builtin.import_role:
-        name: chartmuseum
-        tasks_from: install-prequisities.yaml
+        name: node_python
 
     - ansible.builtin.import_role:
         name: chartmuseum

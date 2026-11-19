@@ -86,11 +86,15 @@ terraform output -raw ansible_inventory > ../ansible-near-rt-ric/inventory.yaml
 
 cd ../ansible-near-rt-ric
 
+# Create a venv with the pinned ansible version (a system-wide install may differ)
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+
 # Deploys a chartmuseum server in the cluster and puts it behind an ingress
-ansible-playbook -i inventory.yaml playbooks/chartmuseum.yaml
+.venv/bin/ansible-playbook -i inventory.yaml playbooks/chartmuseum.yaml
 
 # Pushes near-rt ric charts to the chartmuseum local repo, and applies them 
-ansible-playbook -i inventory.yaml playbooks/near-rt-ric.yaml
+.venv/bin/ansible-playbook -i inventory.yaml playbooks/near-rt-ric.yaml
 ```
 
 The ansible playbooks are written based on the [new installer](../ric-dep/new-installer/README.md) provided by the official RIC repository,

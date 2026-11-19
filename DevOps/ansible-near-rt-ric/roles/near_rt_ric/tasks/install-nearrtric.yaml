@@ -14,8 +14,6 @@
 
 
 - name: Create ricxapp namespace
-  vars:
-    ansible_python_interpreter: /home/ubuntu/k8s-venv/bin/python
   kubernetes.core.k8s:
     name: ricxapp
     api_version: v1

@@ -112,7 +112,8 @@ output "ansible_inventory" {
         k8s_master = {
           hosts = {
             "k8s-master" = {
-              ansible_host = multipass_instance.nodes["k8s-master"].ipv4[0]
+              ansible_host               = multipass_instance.nodes["k8s-master"].ipv4[0]
+              ansible_python_interpreter = "/home/ubuntu/k8s-venv/bin/python"
             }
           }
         }

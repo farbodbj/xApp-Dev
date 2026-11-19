@@ -38,7 +38,8 @@ fi
 multipass version
 
 
-# TODO: install ansible
+python3 -m venv "$(dirname "$0")/ansible-near-rt-ric/.venv"
+"$(dirname "$0")/ansible-near-rt-ric/.venv/bin/pip" install -r "$(dirname "$0")/ansible-near-rt-ric/requirements.txt"
 
 
 # Now we generate a ssh public-private key pair for ansible to connect to our k8s nodes

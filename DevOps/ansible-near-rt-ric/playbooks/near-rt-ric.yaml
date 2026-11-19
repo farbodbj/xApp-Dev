@@ -1,5 +1,11 @@
 ---
 # playbooks/near-rt-ric.yaml
+- name: Bootstrap Python on master
+  hosts: k8s_master
+  tasks:
+    - ansible.builtin.import_role:
+        name: node_python
+
 - name: Common setup on all nodes
   hosts: all
   become: true

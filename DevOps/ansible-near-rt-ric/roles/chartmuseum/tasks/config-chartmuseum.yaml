@@ -1,7 +1,5 @@
 
 - name: Find the node running the ingress controller
-  vars:
-    ansible_python_interpreter: /home/ubuntu/k8s-venv/bin/python
   kubernetes.core.k8s_info:
     kubeconfig: "{{ kubeconfig_path }}"
     kind: Pod
