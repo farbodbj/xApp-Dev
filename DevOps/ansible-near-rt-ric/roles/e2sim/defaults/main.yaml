@@ -1,0 +1,2 @@
+---
+e2sim_submodule_root: "{{ playbook_dir }}/../../../e2-interface"

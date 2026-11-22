@@ -1,0 +1,12 @@
+---
+- name: Copy e2sim project
+  ansible.posix.synchronize:
+    src: "{{ e2sim_submodule_root }}"
+    dest: /home/ubuntu/
+
+- name: Build the e2sim binary
+  community.docker.docker_image_build:
+    name: e2sim
+    path: "/home/ubuntu/e2-interface/e2sim"
+    tag: "latest"
+    dockerfile: "/home/ubuntu/e2-interface/e2sim/Dockerfile_kpm"

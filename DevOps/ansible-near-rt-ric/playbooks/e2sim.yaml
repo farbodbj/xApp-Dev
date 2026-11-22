@@ -1,0 +1,10 @@
+# To avoid installing the build dependancies locally there's a Dockerfile that we use
+- name: Build the e2sim binary
+  hosts: k8s-master
+  tasks:
+    - ansible.builtin.import_role:
+        name: node_docker
+
+    - ansible.builtin.import_role:
+        name: e2sim
+        tasks_from: build_binary.yaml
