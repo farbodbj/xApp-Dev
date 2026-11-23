@@ -12,6 +12,7 @@
 - name: Install ChartMuseum
   hosts: k8s-master
   remote_user: "{{ ansible_user }}"
+  gather_facts: false
   tasks:
     - ansible.builtin.import_role:
         name: node_python

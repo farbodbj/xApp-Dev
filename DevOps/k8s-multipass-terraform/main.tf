@@ -79,7 +79,7 @@ resource "terraform_data" "kubeadm_init" {
       multipass exec k8s-master -- sudo kubeadm init --pod-network-cidr=10.244.0.0/16
       multipass exec k8s-master -- mkdir -p /home/ubuntu/.kube
       multipass exec k8s-master -- sudo cp /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
-      multipass exec k8s-master -- sudo chown $(id -u):$(id -g) /home/ubuntu/.kube/config
+      multipass exec k8s-master -- sudo chown ubuntu:ubuntu /home/ubuntu/.kube/config
       multipass exec k8s-master -- sudo systemctl restart kubelet
       multipass exec k8s-master -- kubectl create ns kube-flannel
       multipass exec k8s-master -- kubectl label --overwrite ns kube-flannel pod-security.kubernetes.io/enforce=privileged
