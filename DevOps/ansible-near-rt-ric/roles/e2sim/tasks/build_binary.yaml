@@ -4,9 +4,30 @@
     src: "{{ e2sim_submodule_root }}"
     dest: /home/ubuntu/
 
+
+# I have manually pushed the image to my dockerhub. I have to push it here (TODO)
 - name: Build the e2sim binary
   community.docker.docker_image_build:
     name: e2sim
     path: "/home/ubuntu/e2-interface/e2sim"
-    tag: "latest"
+    tag: "0.0.1"
     dockerfile: "/home/ubuntu/e2-interface/e2sim/Dockerfile_kpm"
+
+- name: Get the E2 termination service ip
+  kubernetes.core.k8s_info:
+    kind: Service
+    name: service-ricplt-e2term-sctp-alpha
+    namespace: ricplt
+  register: e2term_svc
+
+- name: Set E2 term IP and port facts
+  ansible.builtin.set_fact:
+    e2term_ip: "{{ e2term_svc.resources[0].spec.clusterIP }}"
+    e2term_port: "{{ e2term_svc.resources[0].spec.ports[0].port }}"
+
+
+- name: Deploy e2 interface simulator
+  kubernetes.core.k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    state: present
+    definition: "{{ lookup('template', playbook_dir ~ '/../charts/e2sim/deployment.yaml.j2') | from_yaml }}"

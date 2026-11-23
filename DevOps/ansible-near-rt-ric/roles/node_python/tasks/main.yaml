@@ -14,7 +14,7 @@
     ansible_python_interpreter: /usr/bin/python3
   ansible.builtin.command:
     cmd: python3 -m venv --system-site-packages /home/ubuntu/k8s-venv
-    creates: /home/ubuntu/k8s-venv/bin/python
+    creates: /home/ubuntu/k8s-venv/bin/pip
 
 - name: Install Python libraries into the venv
   vars:
@@ -27,3 +27,7 @@
       - kubernetes==37.0.2
       - openshift
     virtualenv: /home/ubuntu/k8s-venv/
+
+- name: Set the venv for everyone
+  ansible.builtin.set_fact:
+    ansible_python_interpreter: /home/ubuntu/k8s-venv/bin/python

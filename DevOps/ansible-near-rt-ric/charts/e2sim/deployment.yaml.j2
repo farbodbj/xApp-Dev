@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: e2-interface-simulator
+  namespace: ricplt
+  labels:
+    app: e2-interface-simulator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: e2-interface-simulator
+  template:
+    metadata:
+      labels:
+        app: e2-interface-simulator
+    spec:
+      containers:
+      - name: e2-interface-simulator
+
+        # I will add a private docker registry to the cluster to avoid docker-hub
+        image: farbodbij/e2-interface-simulator:0.0.1
+        imagePullPolicy: IfNotPresent
+
+        env:
+        - name: E2TERM_IP
+          value: "{{ e2term_ip }}"
+        - name: E2TERM_PORT
+          value: "{{ e2term_port | default(32222) }}"
+        
+        command: ["kpm_sim"]
+        args: ["$(E2TERM_IP)", "$(E2TERM_PORT)"]

@@ -27,11 +27,13 @@ locals {
       })
     }
 
+    # The reason I am allocating 20 GB to worker nodes is because PVs will be allocated here. Nearing kubelet's ephemeral storage thresholds causes pod 
+    # evictions which we don't want. However I have to tune those params too (TODO)
     k8s-worker1 = {
       name   = "k8s-worker1"
       cpus   = 2
       memory = "2G"
-      disk   = "10G"
+      disk   = "20G"
 
       cloud_init = templatefile(pathexpand("~/cloud-init-worker.yaml.tftpl"), {
         ssh_public_key = local.ansible_ssh_public_key
@@ -42,7 +44,7 @@ locals {
       name   = "k8s-worker2"
       cpus   = 2
       memory = "2G"
-      disk   = "10G"
+      disk   = "20G"
 
 
       cloud_init = templatefile(pathexpand("~/cloud-init-worker.yaml.tftpl"), {
