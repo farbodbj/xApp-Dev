@@ -6,6 +6,7 @@ This file contains the links for papers, documentations and other stuff I had to
 
 **Managing O-RAN Networks: xApp Development from Zero to Hero [link](https://arxiv.org/pdf/2407.09619)**: Introduction to architecture, basics, examples and the nesecary information to get a sense about xApps, their interface and how they can be developed and deployed
 
+**Onboarding and Deployment of Hw-go xApp [link](https://docs.o-ran-sc.org/projects/o-ran-sc-ric-app-hw-go/en/latest/onboard-and-deploy.html)**
 
 ## Hands-on Tutorials
 
