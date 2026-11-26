@@ -1,0 +1,1 @@
+# DISCLAIMER: THIS IS TAKEN DIRECTLY FROM [XAPP-FRAME](https://github.com/o-ran-sc/ric-plt-xapp-frame/tree/master/examples)

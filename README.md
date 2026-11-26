@@ -33,11 +33,8 @@ I have aimed to setup the whole infrastructure for xApp developement as code (Ia
 
 * **Deploying E2 Simulator**: To simulate the data that RAN feeds to RIC, we need to use an E2 simulator which connects to the E2-Termination service and provides metrics allowing xApps to get feedback when they change a parameter. This step is done by building the [Docker image](./e2-interface/e2sim/Dockerfile_kpm) at e2-interface repo and then manually pushing it to my own dockerhub. It's very ugly and I will soon fix it. 
 
-
-* **Install xApp Onboarder**: We install the `dms_cli` tool from the [appmgr](https://gerrit.o-ran-sc.org/r/ric-plt/appmgr) and use it to onboard an install a new xApp.
-
 ### Phase 2: Adding The First xApp
-
+To demonstrate, I use the example xApp from the [XAPP-FRANE](https://github.com/o-ran-sc/ric-plt-xapp-frame/tree/master) repo. I have defined a K8s job that deploys an xApp using the `dms_cli` tool by calling helm from within a pod. 
 
 
 ## References

@@ -8,6 +8,9 @@ This file contains the links for papers, documentations and other stuff I had to
 
 **Onboarding and Deployment of Hw-go xApp [link](https://docs.o-ran-sc.org/projects/o-ran-sc-ric-app-hw-go/en/latest/onboard-and-deploy.html)**
 
+**xApp development framework by ORAN: [XAPP-FRAME](https://github.com/o-ran-sc/ric-plt-xapp-frame)**: Details various APIs, including metrics, RMR and 
+SDL. Includes an example fully functional xApp written in Go. 
+
 ## Hands-on Tutorials
 
 **O-RAN-SC Installation Guide [link](https://docs.o-ran-sc.org/projects/o-ran-sc-ric-plt-ric-dep/en/latest/installation-guides.html)**
