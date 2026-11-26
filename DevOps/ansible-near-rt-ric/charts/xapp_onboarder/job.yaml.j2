@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: xapp-descriptors
+data:
+  schema.json: |
+    {{XAPP_SCHEMA}}
+  config-file.json: | 
+    {{XAPP_CONFIG}}
+  
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: xapp-onboarder
+spec:
+  template:
+    spec:
+      containers:
+      - name: xapp-onboarder
+        # I will add an internal registry for k8s
+        # the tag is set from latest commit hash from the o-ran-sc/ric-plt-appmgr repo
+        image: farbodbij/xapp-appmgr:0545415b5
+        command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -e
+              if [ ! -f /xapp/config-file.json ] || [ ! -f /xapp/schema.json ]; then
+                echo "xapp config and/or schema not found!" >&2
+                exit 1
+              fi
+
+              dms_cli onboard /xapp/config-file.json /xapp/schema.json
+              dms_cli get_charts_list
+              dms_cli install "${XAPP_NAME}" "${XAPP_VERSION}" ricxapp
+
+        env:
+        - name: XAPP_NAME
+          value: "{{XAPP_NAME}}"
+        - name: XAPP_VERSION
+          value: "{{XAPP_VERSION}}"
+        - name: CHART_REPO_URL
+          value: "{{CHART_REPO_URL}}"
+        
+        volumeMounts:
+          - name: xapp-descriptors
+            mountPath: /xapp
+            readOnly: true
+  
+      volumes:
+        - name: config-volume
+          configMap:
+            name: xapp-descriptors
+
+      restartPolicy: Never
+  backoffLimit: 4
+
+
+

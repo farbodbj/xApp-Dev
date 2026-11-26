@@ -1,0 +1,6 @@
+- name: Onboard an xApp 
+  hosts: k8s-master
+  tasks:
+    - ansible.builtin.import_role:
+        name: xapp_onboarder
+
