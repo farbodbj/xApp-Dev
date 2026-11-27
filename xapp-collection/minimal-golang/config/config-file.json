@@ -7,8 +7,8 @@
         {
             "name": "example",
             "image": {
-                "registry": "ranco-dev-tools.eastus.cloudapp.azure.com:10001",
-                "name": "example-xapp",
+                "registry": "docker.io",
+                "name": "farbodbij/example-xapp",
                 "tag": "0.5.3"
             },
             "resources": {

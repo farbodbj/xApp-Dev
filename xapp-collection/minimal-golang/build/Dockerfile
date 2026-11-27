@@ -32,13 +32,14 @@ RUN mkdir -p /go/src/example-xapp
 COPY . /go/src/example-xapp
 
 WORKDIR "/go/src/example-xapp"
-#RUN ./build/build_example_xapp.sh
+RUN ./build/build_example_xapp.sh
 
-ENV CFG_FILE=config/config-file.json
-ENV RMR_SEED_RT=config/uta_rtg.rt
-ENV GO111MODULE=on GO_ENABLED=0 GOOS=linux
+# TODO: Invesitage why the direct build command fails
+# ENV CFG_FILE=config/config-file.json
+# ENV RMR_SEED_RT=config/uta_rtg.rt
+# ENV GO111MODULE=on GO_ENABLED=0 GOOS=linux
 
-RUN go build -a -installsuffix cgo -o example_xapp cmd/example-xapp.go
+# RUN go build -a -installsuffix cgo -x -o example_xapp cmd/example-xapp.go
 
 # Final, executable and deployable container
 FROM ubuntu:18.04
