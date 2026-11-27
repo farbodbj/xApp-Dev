@@ -4,9 +4,6 @@
   "$id": "http://example.com/root.json",
   "type": "object",
   "title": "The Root Schema",
-  "required": [
-    "subscriptionActive"
-  ],
   "properties": {
     "subscriptionActive": {
       "$id": "#/properties/subscriptionActive",

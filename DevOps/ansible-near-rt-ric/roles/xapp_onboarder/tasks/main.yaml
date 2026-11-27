@@ -1,1 +1,42 @@
-# TODO: launch the xapp_onboarder k8s job
+- name: Read xApp descriptor files
+  ansible.builtin.set_fact:
+    _xapp_config: "{{ lookup('file', xapps_dir ~ '/' ~ xapp_name ~ '/config/config-file.json') | from_json }}"
+    _xapp_schema: "{{ lookup('file', xapps_dir ~ '/' ~ xapp_name ~ '/config/schema.json') | from_json }}"
+
+- name: Resolve xApp chart name and version
+  ansible.builtin.set_fact:
+    _xapp_effective_name: "{{ xapp_chart_name | default(_xapp_config.name, true) }}"
+    _xapp_effective_version: "{{ xapp_version | default(_xapp_config.version, true) }}"
+
+# dms_cli onboards with the name/version from config-file.json, so the overrides
+# must be written back into the descriptor to keep onboarding and install in sync
+- name: Apply xApp name/version overrides to the descriptor
+  ansible.builtin.set_fact:
+    _xapp_config: "{{ _xapp_config | combine({'name': _xapp_effective_name, 'version': _xapp_effective_version}) }}"
+
+# Re-serialize as text because older ansible-core versions coerce JSON-looking
+# strings assigned through set_fact into dicts
+- name: Render descriptor files
+  ansible.builtin.set_fact:
+    _xapp_config_json: "{{ _xapp_config | to_nice_json }}"
+    _xapp_schema_json: "{{ _xapp_schema | to_nice_json }}"
+
+# Jobs are immutable, so remove a previous run before recreating it
+- name: Remove previous xapp onboarder job
+  kubernetes.core.k8s:
+    state: absent
+    api_version: batch/v1
+    kind: Job
+    namespace: ricxapp
+    name: xapp-onboarder
+
+- name: Run xapp onboarder for a specific job
+  kubernetes.core.k8s:
+    state: present
+    template: "{{ playbook_dir }}/../charts/xapp-onboarder/job.yaml.j2"
+  vars:
+    CHART_REPO_URL: "http://chartmuseum.chartmuseum.svc.cluster.local:8080"
+    XAPP_VERSION: "{{ _xapp_effective_version }}"
+    XAPP_NAME: "{{ _xapp_effective_name }}"
+    XAPP_SCHEMA: "{{ _xapp_schema_json }}"
+    XAPP_CONFIG: "{{ _xapp_config_json }}"

@@ -1,0 +1,10 @@
+- name: Onboard an xApp
+  hosts: k8s-master
+  vars:
+    xapp_name: minimal-golang
+  tasks:
+    - ansible.builtin.import_role:
+        name: node_python
+
+    - ansible.builtin.import_role:
+        name: xapp_onboarder
